@@ -1,24 +1,46 @@
----
-layout: default
----
-<div class="page-header">
-  <h1 class="page-title">{{page.title}}</h1>
-  <span class="page-list-date">
-    <i class="fa fa-calendar-o" aria-hidden="true"></i> {{ page.date | date: "%B %-d, %Y" }}
-  </span>
-</div>
-<div class="post-container">
-  {% if page.img %}
-   <img class="post-img" src={{ "/assets/img/" | prepend: site.baseurl | append : page.img}} alt="{{page.title}}">
-  {% endif %}
-  <div class="post-content">
-    <article>
-      {% if page.author %}
-      <div class="date-byline"><span><i class="fa fa-calendar-o" aria-hidden="true"></i> {{page.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;&nbsp;</span><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{page.author}}</span></div>
-      {% endif %}
-      {{page.content | markdownify}}
-    </article>
-    {% include share.html %}
-    {% include disqus.html %}
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/BlogPosting">
+    {% include head.html %}
+    <body class="has-push-menu">
+        {% include minutes-to-read.html %}
+        {% include svg-icons.html %}
+        {% include header.html %}
+        <section class="post">
+
+            <article role="article" id="post" class="post-content" itemprop="articleBody">
+                <p itemprop="post-info" class="post-info">
+                    {% if page.date %}
+                        <svg id="date" class="icon-calendar"><use xlink:href="#icon-calendar"></use></svg>
+                        <time itemprop="datePublished" datetime="{{ page.date | date_to_xmlschema }}" class="date">
+                            {% include date.html date=page.date %}
+                        </time>
+                    {% endif %}
+                    <svg id="clock" class="icon-clock"><use xlink:href="#icon-clock"></use></svg>
+                    <span>{{ minutesText }}</span>
+                </p>
+                <h1 class="post-title" itemprop="name">{{ page.title }}</h1>
+                <p itemprop="description" class="subtitle">{{ page.description }}</p>
+
+                {% if page.image %}
+                    <img src="{{ page.image }}" alt="Imagem de capa" class="post-cover">
+                {% endif %}
+
+                {{ content }}
+            </article>
+
+            <div class="progress-bar" data-minutes="{{ totalMinutes }}">
+                <span class="time-completed"></span>
+                <span class="time-remaining"></span>
+                <div class="bar">
+                    <span class="completed" style="width:0%;"></span>
+                    <span class="remaining" style="width:100%;"></span>
+                </div>
+            </div>
+
+            {% include share.html %}
+            {% include author.html %}
+            {% include comments.html %}
+            {% include footer.html %}
+        </section>
+    </body>
+</html>
